@@ -37,9 +37,9 @@ class SensorView extends Component {
             gy: 0,
             gz: 0,
             timestamp: 0,
-            xthresh: null,
-            ythresh: null,
-            zthresh: null,
+            xbase: null,
+            ybase: null,
+            zbase: null,
             calibration_status: false
         };
         
@@ -64,7 +64,7 @@ class SensorView extends Component {
                 if (CALIBRATION_STATUS){
                     x = this.filter(x, xdata.slice(-1)[0], LOW_PASS);
                     y = this.filter(y, ydata.slice(-1)[0], LOW_PASS);
-                    z = this.filter(x, zdata.slice(-1)[0], LOW_PASS);
+                    z = this.filter(z, zdata.slice(-1)[0], LOW_PASS);
                 }
 
                 zdata.push(z);
@@ -106,22 +106,41 @@ class SensorView extends Component {
 
     }
 
+    zthresh = (z) => {
+
+    }
+
     anomalyCheck = () => {
-        if (!this.state.thresh) return
+        if (!this.state.zbase) return
         console.log('anomaly check');
 
         //z-thresh
-        const zthresh = this.state.y - this.state.thresh;
-        if (zthresh > MAJOR_THRESHOLD){ //POTHOLE
-            console.log('MAJOR ' + zthresh)
-        } else if (zthresh > MINOR_THRESHOLD){ //BAD ROAD PATCHES
-            console.log('MINOR ' + zthresh);
-        } else if (zthresh > MINOR_MILD){
-            console.log('MINOR_MILD ' + zthresh);
-        } else if (zthresh > MILD_THRESHOLD){  //LITTLE SHAKES
-            console.log('MILD ' + zthresh);
+        const zbase = this.state.z - this.state.zbase;
+        if (zbase > MAJOR_THRESHOLD){ //POTHOLE
+            console.log('Z-THRESH: ' + 'MAJOR ' + zbase)
+        } else if (zbase > MINOR_THRESHOLD){ //BAD ROAD PATCHES
+            console.log('Z-THRESH: ' + 'MINOR ' + zbase);
+        } else if (zbase > MINOR_MILD){
+            console.log('Z-THRESH: ' + 'MINOR_MILD ' + zbase);
+        } else if (zbase > MILD_THRESHOLD){  //LITTLE SHAKES
+            console.log('Z-THRESH: ' + 'MILD ' + zbase);
         } else {
             // console.log('good road');
+        }
+
+        //z-diff
+        const zbase2 = this.state.zdata.slice(-2)[0] - this.state.zbase
+        const zdiff = Math.abs(zbase -zbase2)
+        if (zdiff > MAJOR_THRESHOLD){
+            console.log('Z-DIFF: ' + 'MAJOR ' + zdiff);
+        } else if (zdiff > MINOR_THRESHOLD){
+            console.log('Z-DIFF: ' + 'MINOR ' + zdiff);
+        } else if (zdiff > MINOR_MILD){
+            console.log('Z-DIFF: ' + 'MINOR ' + zdiff);
+        } else if (zdiff > MILD_THRESHOLD) {
+            console.log('Z-DIFF: ' + 'MINOR ' + zdiff);
+        } else {
+            // console.log('Z-DIFF: ' + 'GOOD ROAD ' + zdiff);
         }
     }
 
@@ -142,15 +161,16 @@ class SensorView extends Component {
         // console.clear();
         console.log("Calibration Start");
         const ysum = ydata.reduce((a, b) => a + b)
-        const ythresh = ysum / ydata.length;
+        const ybase = ysum / ydata.length;
 
         const zsum = zdata.reduce((a, b) => a + b)
-        const zthresh = zsum / zdata.length;
+        const zbase = zsum / zdata.length;
         
         const xsum = xdata.reduce((a, b) => a + b)
-        const xthresh = xsum / xdata.length;
+        const xbase = xsum / xdata.length;
 
-        this.setState({zthresh, ythresh, xthresh, calibration_status: true});
+        this.setState({zbase, ybase, xbase, calibration_status: true});
+        alert("Calibrated");
     }
 
     filter = (currentValue, lastValue, FILTER_TYPE = LOW_PASS) => {
