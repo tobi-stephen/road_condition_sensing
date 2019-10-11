@@ -1,5 +1,5 @@
 import React, { Fragment, Component } from 'react';
-import { View, Text, Button } from 'react-native';
+import { View, Text, Button, ToastAndroid } from 'react-native';
 import styles from './styles';
 import { setUpdateIntervalForType, SensorTypes, accelerometer, gyroscope } from 'react-native-sensors';
 import Geolocation from 'react-native-geolocation-service';
@@ -115,15 +115,20 @@ class SensorView extends Component {
         console.log('anomaly check');
 
         //z-thresh
-        const zbase = this.state.z - this.state.zbase;
+        const zbase = Math.abs(this.state.z - this.state.zbase);
+        // ToastAndroid.show(zbase.toString(), ToastAndroid.SHORT)
         if (zbase > MAJOR_THRESHOLD){ //POTHOLE
             console.log('Z-THRESH: ' + 'MAJOR ' + zbase)
+            ToastAndroid.show("DETECTED: Pothole", ToastAndroid.SHORT);
         } else if (zbase > MINOR_THRESHOLD){ //BAD ROAD PATCHES
             console.log('Z-THRESH: ' + 'MINOR ' + zbase);
+            ToastAndroid.show("DETECTED: Bad Road Patch ", ToastAndroid.SHORT);
         } else if (zbase > MINOR_MILD){
             console.log('Z-THRESH: ' + 'MINOR_MILD ' + zbase);
+            ToastAndroid.show("DETECTED: Mild Road Patch ", ToastAndroid.SHORT);
         } else if (zbase > MILD_THRESHOLD){  //LITTLE SHAKES
             console.log('Z-THRESH: ' + 'MILD ' + zbase);
+            ToastAndroid.show("DETECTED: Little Shakes ", ToastAndroid.SHORT);
         } else {
             // console.log('good road');
         }
@@ -165,12 +170,14 @@ class SensorView extends Component {
 
         const zsum = zdata.reduce((a, b) => a + b)
         const zbase = zsum / zdata.length;
+        ToastAndroid.show("zbase: " + zbase.toString(), ToastAndroid.SHORT);
         
         const xsum = xdata.reduce((a, b) => a + b)
         const xbase = xsum / xdata.length;
 
         this.setState({zbase, ybase, xbase, calibration_status: true});
-        alert("Calibrated");
+        // alert("Calibrated");
+        ToastAndroid.show('Calibrated', ToastAndroid.LONG)
     }
 
     filter = (currentValue, lastValue, FILTER_TYPE = LOW_PASS) => {
