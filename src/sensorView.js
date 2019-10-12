@@ -40,7 +40,8 @@ class SensorView extends Component {
             xbase: null,
             ybase: null,
             zbase: null,
-            calibration_status: false
+            calibration_status: false,
+            anomaly: ""
         };
         
     }
@@ -119,16 +120,20 @@ class SensorView extends Component {
         // ToastAndroid.show(zbase.toString(), ToastAndroid.SHORT)
         if (zbase > MAJOR_THRESHOLD){ //POTHOLE
             console.log('Z-THRESH: ' + 'MAJOR ' + zbase)
-            ToastAndroid.show("DETECTED: Pothole", ToastAndroid.SHORT);
+            // ToastAndroid.show("DETECTED: Pothole", ToastAndroid.SHORT);
+            this.setState({anomaly: "Pothole " + zbase});
         } else if (zbase > MINOR_THRESHOLD){ //BAD ROAD PATCHES
             console.log('Z-THRESH: ' + 'MINOR ' + zbase);
-            ToastAndroid.show("DETECTED: Bad Road Patch ", ToastAndroid.SHORT);
+            // ToastAndroid.show("DETECTED: Bad Road Patch ", ToastAndroid.SHORT);
+            this.setState({anomaly: "Bad Road Patch " + zbase});
         } else if (zbase > MINOR_MILD){
             console.log('Z-THRESH: ' + 'MINOR_MILD ' + zbase);
-            ToastAndroid.show("DETECTED: Mild Road Patch ", ToastAndroid.SHORT);
+            // ToastAndroid.show("DETECTED: Mild Road Patch ", ToastAndroid.SHORT);
+            this.setState({anomaly: "Mildly Bad " + zbase});
         } else if (zbase > MILD_THRESHOLD){  //LITTLE SHAKES
             console.log('Z-THRESH: ' + 'MILD ' + zbase);
-            ToastAndroid.show("DETECTED: Little Shakes ", ToastAndroid.SHORT);
+            // ToastAndroid.show("DETECTED: Little Shakes ", ToastAndroid.SHORT);
+            this.setState({anomaly: "Little shakes " + zbase});
         } else {
             // console.log('good road');
         }
@@ -170,7 +175,7 @@ class SensorView extends Component {
 
         const zsum = zdata.reduce((a, b) => a + b)
         const zbase = zsum / zdata.length;
-        ToastAndroid.show("zbase: " + zbase.toString(), ToastAndroid.SHORT);
+        // ToastAndroid.show("zbase: " + zbase.toString(), ToastAndroid.SHORT);
         
         const xsum = xdata.reduce((a, b) => a + b)
         const xbase = xsum / xdata.length;
@@ -194,12 +199,19 @@ class SensorView extends Component {
     }
 
     render() {
-        const {x, y, z, gz, gy, gx, timestamp} = this.state;
+        const {zbase, anomaly, x, y, z, gz, gy, gx, timestamp} = this.state;
 
         return(
             <Fragment>
                 <View style={styles.sectionContainer}>
                     <Button title="Calibrate" onPress={this.calibrate}/>
+                    <Text style={styles.highlight}>Zbase: {zbase? zbase.toFixed(3): -1}</Text>
+                    <Text style={styles.sectionTitle}>Last Detection</Text>
+                    <Text style={styles.sectionDescription}>
+                        <Text style={styles.highlight}>{anomaly}</Text>
+                    </Text>
+                </View>
+                <View style={styles.sectionContainer}>
                     <Text style={styles.sectionTitle}>Accelerometer: </Text>
                     <Text style={styles.sectionDescription}>
                         <Text style={styles.highlight}>{x.toFixed(2)}</Text>,

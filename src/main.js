@@ -13,7 +13,7 @@ class Main extends Component {
         this.state = {
             sensorData: null,
             geoPostion: {},
-            activeAxis: 'xdata',
+            activeAxis: 'zdata',
         }
         this.updateSensorData = this.updateSensorData.bind(this);
         this.updateGeoPosition = this.updateGeoPosition.bind(this);
@@ -44,7 +44,7 @@ class Main extends Component {
                     </View>
                     <ChartView sensorData={this.state.sensorData} activeAxis={this.state.activeAxis}/>
                     <SensorView updateData={this.updateSensorData} />
-                    <GeoView updateData={this.updateGeoPosition} />
+                    {/* <GeoView updateData={this.updateGeoPosition} /> */}
                     <View style={{height: 50}}></View>
                 </ScrollView>
             </Fragment>
