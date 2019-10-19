@@ -146,9 +146,9 @@ class SensorView extends Component {
         } else if (zdiff > MINOR_THRESHOLD){
             console.log('Z-DIFF: ' + 'MINOR ' + zdiff);
         } else if (zdiff > MINOR_MILD){
-            console.log('Z-DIFF: ' + 'MINOR ' + zdiff);
+            console.log('Z-DIFF: ' + 'MINOR_MILD ' + zdiff);
         } else if (zdiff > MILD_THRESHOLD) {
-            console.log('Z-DIFF: ' + 'MINOR ' + zdiff);
+            console.log('Z-DIFF: ' + 'MILD ' + zdiff);
         } else {
             // console.log('Z-DIFF: ' + 'GOOD ROAD ' + zdiff);
         }
