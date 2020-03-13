@@ -11,7 +11,7 @@ const MINOR_THRESHOLD = 5;
 const MINOR_MILD = 3;
 const MILD_THRESHOLD = 1;
 
-const SENSOR_INTERVAL = 100;
+const SENSOR_INTERVAL = 200;
 const TIME_TO_CALIBRATE = 2000;
 const ANOMALY_CHECK = 200;
 const UPDATE_INTERVAL = 3000;
@@ -217,6 +217,7 @@ class SensorView extends Component {
                         <Text style={styles.highlight}>{x.toFixed(2)}</Text>,
                         <Text style={styles.highlight}>{y.toFixed(2)}</Text>,
                         <Text style={styles.highlight}>{z.toFixed(2)}</Text>
+                        <Text style={styles.highlight}> = {(Math.sqrt(Math.pow(x,2)+Math.pow(y,2)+Math.pow(z,2))).toFixed(2)}</Text>
                     </Text>
                 </View>
                 <View style={styles.sectionContainer}>

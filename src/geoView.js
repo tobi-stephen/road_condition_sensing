@@ -32,7 +32,7 @@ class GeoView extends Component {
                 this.watchid = Geolocation.watchPosition(
                     (position) => {
                         this.setState({position});
-                        // console.log(JSON.stringify(position));
+                        console.log(JSON.stringify(position));
                     },
                     (error) => {
                         console.log(`GeoLoc error: ${JSON.stringify(error)}`)

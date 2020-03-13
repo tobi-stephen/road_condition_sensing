@@ -44,7 +44,7 @@ class Main extends Component {
                     </View>
                     <ChartView sensorData={this.state.sensorData} activeAxis={this.state.activeAxis}/>
                     <SensorView updateData={this.updateSensorData} />
-                    {/* <GeoView updateData={this.updateGeoPosition} /> */}
+                    <GeoView updateData={this.updateGeoPosition} />
                     <View style={{height: 50}}></View>
                 </ScrollView>
             </Fragment>
